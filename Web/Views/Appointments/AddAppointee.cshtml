@@ -1,0 +1,26 @@
+﻿@using Apt.Core.Domain.Appointments;
+@model Appointee
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddAppointee</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm())
+        {
+        <div>
+        Add new Appointee: <br />
+        First Name:  @Html.TextBoxFor(m => m.FirstName) <br />
+        Last Name: @Html.TextBoxFor(m => m.LastName) <br />
+
+        <input type="submit" value="Submit" />
+        </div>
+            
+        }
+    </div>
+</body>
+</html>

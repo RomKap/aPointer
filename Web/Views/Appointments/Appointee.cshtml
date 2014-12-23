@@ -1,0 +1,22 @@
+﻿ @using Apt.Core.Domain.Appointments;
+ 
+ @model List<Appointee>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Appointee</title>
+</head>
+<body>
+
+    <div>
+        @foreach (Appointee aptee in Model)
+        {
+            <div>@aptee.FirstName @aptee.LastName </div><br />
+        }
+    </div>
+
+    
+</body>
+</html>
