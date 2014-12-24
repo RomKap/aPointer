@@ -6,17 +6,21 @@ using System.Web.Mvc;
 using Apt.Core;
 using Apt.Services.Appointments;
 using Apt.Core.Domain.Appointments;
+using Microsoft.Practices.Unity;
 
 
 namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IAppointmentService _AppointmentService;
+
+        //private readonly IAppointmentService _AppointmentService;
+
+        [Dependency]
+        public IAppointmentService _AppointmentService { get; set; }
 
         public HomeController()
         {
-            _AppointmentService = new AppointmentService();
         }
 
         public ActionResult Index()
@@ -31,7 +35,7 @@ namespace Web.Controllers
         {
            List<Appointee> lst = _AppointmentService.GetAllAppointee();
            return View("../Appointments/Appointee", lst);
-        }
+        }        
 
         public ActionResult AddAppointee()
         {

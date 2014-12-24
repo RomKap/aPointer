@@ -9,33 +9,38 @@ using Apt.Core.Domain.Appointments;
 using Spring.Context;
 using Spring.Context.Support;
 using System.Dynamic;
+using Microsoft.Practices.Unity;
+using Unity.Web;
+
 
 namespace WebApp
 {
     public partial class _Default : System.Web.UI.Page
     {
-         public IAppointmentService _AppointmentService;
-         public IAppointmentService ApptService {
-             set { _AppointmentService = value; }
-             get { return _AppointmentService; }
-         }
+     
+         [Dependency]
+         public IAppointmentService _AppointmentService { get; set; }
+
+        //[Dependency]
+         //public IScheduleService _ScheduleService { get; set; }
 
         protected void Page_Load(object sender, EventArgs e)
-        {
-            _AppointmentService = new AppointmentService();
-
-            //IApplicationContext ctx = ContextRegistry.GetContext();
-           // AppointmentService _AppointmentService = (AppointmentService)ctx.GetObject("testaspx");
-
+        {  
+        
             if (!IsPostBack)
             {
                 BindGrid();
+
+                //IUnityContainer container = Application.GetContainer();   
+                //foreach (ContainerRegistration item in container.Registrations)
+                //{
+                //    Response.Write(item.GetMappingAsString());
+                //}
             }
         }    
 
         void BindGrid()
-        {            
-           
+        {  
             List<Appointee> lst = _AppointmentService.GetAllAppointee();
             GRV1.DataSource = lst;
             GRV1.DataBind();
@@ -53,8 +58,7 @@ namespace WebApp
             //dynamic items = new ExpandoObject();
             //items.FirstName = txtFirstName.Text.Trim();
             //items.LastName = txtLastName.Text.Trim();
-            //_AppointmentService.AddOther(items);
-            
+            //_AppointmentService.AddOther(items);            
         }
 
         protected void Submit_Click(object sender, EventArgs e)

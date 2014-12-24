@@ -48,6 +48,8 @@
   <ItemGroup>
     <Compile Include="Appointments\AppointmentService.cs" />
     <Compile Include="Appointments\IAppointmentService.cs" />
+    <Compile Include="Appointments\IScheduleService.cs" />
+    <Compile Include="Appointments\ScheduleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
