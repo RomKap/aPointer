@@ -20,5 +20,10 @@ namespace Dapper
         {
             SqlMapper.Execute(cnn, DynamicQuery.GetUpdateQuery(tableName, param), param);
         }
+
+        public static void Delete<T>(this IDbConnection cnn, string tableName, dynamic param)
+        {
+            IEnumerable<T> result = SqlMapper.Query<T>(cnn, DynamicQuery.GetDeleteQuery(tableName, param), param);            
+        }
     }
 }

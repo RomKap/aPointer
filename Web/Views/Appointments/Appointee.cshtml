@@ -1,6 +1,4 @@
-﻿ @using Apt.Core.Domain.Appointments;
- 
- @model List<Appointee>
+﻿ @model Web.Models.AppointeeViewModel
 <!DOCTYPE html>
 
 <html>
@@ -9,14 +7,30 @@
     <title>Appointee</title>
 </head>
 <body>
+     @using (Html.BeginForm("DelAppointee", "Home", FormMethod.Post))
+     {
+        <div>
+            @foreach (Apt.Core.Domain.Appointments.Appointee aptee in Model.lstAppointee)
+            {
+                <div>@aptee.FirstName @aptee.LastName  @Html.ActionLink("Delete", "DelAppointee", "Home", new { ID = aptee.ApteeID }, null)  </div>
+                <br />
+            }
+        </div>
+     }
 
-    <div>
-        @foreach (Appointee aptee in Model)
+     <div>
+        @using (Html.BeginForm())
         {
-            <div>@aptee.FirstName @aptee.LastName </div><br />
+        <div>
+        Add new Appointee: <br />
+        First Name:  @Html.TextBoxFor(m => m.FirstName) <br />
+        Last Name: @Html.TextBoxFor(m => m.LastName) <br />
+
+        <input type="submit" value="Submit" />
+        </div>
+            
         }
     </div>
 
-    
 </body>
 </html>

@@ -5,8 +5,7 @@ using System.Text;
 using Microsoft.Practices.Unity;
 
 namespace Apt.Core.Infrastructure
-{
-        
+{       
 
     public class AptEngine
     {

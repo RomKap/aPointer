@@ -7,16 +7,22 @@ using Apt.Core.Infrastructure;
 using Apt.Core.Domain.Appointments;
 using Apt.Data.Domain;
 using Apt.Core;
+using System.Runtime.CompilerServices;
+using Microsoft.Practices.Unity;
+ 
 
 namespace Apt.Services.Appointments
 {
     public class AppointmentService : IAppointmentService
     {
-        private readonly IRepository<Appointee> _AppointeeRepo;
+        //private readonly IRepository<Appointee> _AppointeeRepo;
+
+        [Microsoft.Practices.Unity.Dependency]
+        public IRepository<Appointee> _AppointeeRepo { get; set; }
 
         public AppointmentService()
         {
-            _AppointeeRepo = new AppointeeRepository();
+           // _AppointeeRepo = new AppointeeRepository();
         }
 
         public List<Appointee> GetAllAppointee()
@@ -38,6 +44,10 @@ namespace Apt.Services.Appointments
             //throw new NotImplementedException();
         }
 
-       
+        public void DelAppointee(Appointee aptee)
+        {
+            _AppointeeRepo.Remove(aptee);
+        }
+
     }
 }

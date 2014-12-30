@@ -61,10 +61,12 @@ namespace Apt.Data
        {
            using (IDbConnection cn = Connection)
            {
+               var parameters = (object)Mapping(item);
                cn.Open();
                //cn.Execute("DELETE FROM " + _tableName + " WHERE ID=@ID", new { ID = item.ID });
+               cn.Delete<int>(_tableName, parameters);
            }
-       }
+       }       
 
        public virtual T FindByID(Guid id)
        {

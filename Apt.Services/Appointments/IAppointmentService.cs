@@ -17,5 +17,6 @@ namespace Apt.Services.Appointments
         List<Appointee> GetAllAppointee();
         void AddAppointee(Appointee aptee);
         void AddOther(dynamic item);
+        void DelAppointee(Appointee aptee);
     }
 }

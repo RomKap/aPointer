@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using Microsoft.Practices.Unity;
 using Unity.Mvc3;
-using Apt.Services.Appointments;
 using System.Web.Mvc;
+using Apt.Core.Infrastructure;
+
 
 [assembly: WebActivator.PostApplicationStartMethod(typeof(Web.App_Start.UnityConfig), "PostStart")]
 namespace Web.App_Start
@@ -22,9 +23,8 @@ namespace Web.App_Start
         internal static void PostStart()
         {
             IUnityContainer container = new UnityContainer();
-            //HttpContext.Current.Application.SetContainer(container);
-
             RegisterDependencies(container);
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
 
         /// <summary>
@@ -33,8 +33,9 @@ namespace Web.App_Start
         /// <param name="container">Instance of the container to populate.</param>
         private static void RegisterDependencies(IUnityContainer container)
         {
-            container.RegisterType<IAppointmentService, AppointmentService>();
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            //container.RegisterType<IAppointmentService, AppointmentService>();
+
+             ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll");
         }
     }
 }

@@ -61,6 +61,22 @@ namespace RepoWrapper
         }
 
         /// <summary>
+        /// Gets the delete query.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="item">The item.</param>
+        /// <returns>
+        /// The Sql query based on the item properties.
+        /// </returns>
+        public static string GetDeleteQuery(string tableName, dynamic item)
+        {
+            PropertyInfo[] props = item.GetType().GetProperties();        
+            string primaryKeyCoulmn = props.Where(s => s.GetCustomAttributes(typeof(PrimaryKey), true).Length > 0).Select(p => p.Name).FirstOrDefault();
+
+            return string.Format("DELETE FROM {0} WHERE {1}=@{1}", tableName, primaryKeyCoulmn);
+        }
+
+        /// <summary>
         /// Gets the dynamic query.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>

@@ -7,6 +7,7 @@ using Apt.Core;
 using Apt.Services.Appointments;
 using Apt.Core.Domain.Appointments;
 using Microsoft.Practices.Unity;
+using Web.Models;
 
 
 namespace Web.Controllers
@@ -33,9 +34,23 @@ namespace Web.Controllers
 
         public ActionResult AllAppointee()
         {
-           List<Appointee> lst = _AppointmentService.GetAllAppointee();
-           return View("../Appointments/Appointee", lst);
-        }        
+           AppointeeViewModel apvm = new AppointeeViewModel();
+           apvm.lstAppointee = _AppointmentService.GetAllAppointee();
+           return View("../Appointments/Appointee", apvm);
+        }
+
+        [HttpPost]
+        public ActionResult AllAppointee(AppointeeViewModel apvm)
+        {
+            Appointee aptee = new Appointee();
+            aptee.FirstName = apvm.FirstName;
+            aptee.LastName = apvm.LastName;
+            aptee.CreatedOn = DateTime.Now;
+            aptee.ModifiedOn = DateTime.Now;
+            _AppointmentService.AddAppointee(aptee);
+
+            return RedirectToAction("AllAppointee");
+        }   
 
         public ActionResult AddAppointee()
         {
@@ -49,6 +64,20 @@ namespace Web.Controllers
             aptee.ModifiedOn = DateTime.Now;         
             _AppointmentService.AddAppointee(aptee);
             return View(aptee);
+        }
+
+   
+        public ActionResult DelAppointee(int ID)
+        {      
+            Appointee aptee = new Appointee();
+            aptee.ApteeID = ID;
+            _AppointmentService.DelAppointee(aptee);
+
+
+            AppointeeViewModel apvm = new AppointeeViewModel();
+            apvm.lstAppointee = _AppointmentService.GetAllAppointee();
+            return View("../Appointments/Appointee", apvm);
+
         }
     }
 }
