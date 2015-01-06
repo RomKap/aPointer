@@ -1,16 +1,15 @@
 using System.Web;
-
 using Microsoft.Practices.Unity;
 using Unity.WebForms;
-using Apt.Services.Appointments;
+using Apt.Core.Infrastructure;
 
-[assembly: WebActivator.PostApplicationStartMethod( typeof(WebApp.App_Start.UnityWebFormsStart), "PostStart" )]
+[assembly: WebActivator.PostApplicationStartMethod( typeof(WebApp.App_Start.UnityConfig), "PostStart" )]
 namespace WebApp.App_Start
 {
 	/// <summary>
 	///		Startup class for the Unity.WebForms NuGet package.
 	/// </summary>
-	internal static class UnityWebFormsStart
+	internal static class UnityConfig
 	{
 		/// <summary>
 		///     Initializes the unity container when the application starts up.
@@ -24,7 +23,7 @@ namespace WebApp.App_Start
 			IUnityContainer container = new UnityContainer();
 			HttpContext.Current.Application.SetContainer( container );
 
-			RegisterDependencies( container );
+			RegisterDependencies( container );           
 		}
 
 		/// <summary>
@@ -33,7 +32,9 @@ namespace WebApp.App_Start
 		/// <param name="container">Instance of the container to populate.</param>
 		private static void RegisterDependencies( IUnityContainer container )
 		{
-            container.RegisterType<IAppointmentService, AppointmentService>();
+            //container.RegisterType<IAppointmentService, AppointmentService>();
+
+            ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll");
 		}
 	}
 }

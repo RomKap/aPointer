@@ -15,14 +15,23 @@ namespace Apt.Services.Appointments
 {
     public class AppointmentService : IAppointmentService
     {
-        //private readonly IRepository<Appointee> _AppointeeRepo;
+        private IRepository<Appointee> _AppointeeRepo;
 
         [Microsoft.Practices.Unity.Dependency]
-        public IRepository<Appointee> _AppointeeRepo { get; set; }
+        public IRepository<Appointee> AppointeeRepo {
+            get
+            {
+                return _AppointeeRepo;
+            }
+            set
+            {
+                _AppointeeRepo = value;
+            }
+        }
 
         public AppointmentService()
         {
-           // _AppointeeRepo = new AppointeeRepository();
+           // AppointeeRepo = new AppointeeRepository();
         }
 
         public List<Appointee> GetAllAppointee()

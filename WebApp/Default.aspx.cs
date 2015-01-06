@@ -21,9 +21,6 @@ namespace WebApp
          [Dependency]
          public IAppointmentService _AppointmentService { get; set; }
 
-        //[Dependency]
-         //public IScheduleService _ScheduleService { get; set; }
-
         protected void Page_Load(object sender, EventArgs e)
         {  
         
@@ -65,6 +62,19 @@ namespace WebApp
         {
             AddAppointee();
             BindGrid();
+        }
+
+        protected void GRV1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DelAppointee")
+            {
+                int ID = Convert.ToInt32(e.CommandArgument);
+                Appointee aptee = new Appointee();
+                aptee.ApteeID = ID;
+                _AppointmentService.DelAppointee(aptee);
+
+                BindGrid();
+            }
         }
 
     }

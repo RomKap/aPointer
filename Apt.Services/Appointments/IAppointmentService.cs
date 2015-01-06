@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Apt.Core;
 using Apt.Core.Domain.Appointments;
+using Apt.Core.Infrastructure;
  
 
 namespace Apt.Services.Appointments
@@ -18,5 +19,6 @@ namespace Apt.Services.Appointments
         void AddAppointee(Appointee aptee);
         void AddOther(dynamic item);
         void DelAppointee(Appointee aptee);
+        IRepository<Appointee> AppointeeRepo { get; set; }
     }
 }
