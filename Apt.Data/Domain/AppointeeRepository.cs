@@ -25,4 +25,9 @@ namespace Apt.Data.Domain
             }
         }
     }
+
+    public sealed class AppointerRepository : Repository<Appointer>
+    {
+        public AppointerRepository() : base("Appointer") { }
+    }
 }

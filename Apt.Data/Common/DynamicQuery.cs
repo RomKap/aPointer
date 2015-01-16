@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Apt.Core.Domain.Appointments;
+using Apt.Core;
 
 namespace RepoWrapper
 {
@@ -74,6 +75,14 @@ namespace RepoWrapper
             string primaryKeyCoulmn = props.Where(s => s.GetCustomAttributes(typeof(PrimaryKey), true).Length > 0).Select(p => p.Name).FirstOrDefault();
 
             return string.Format("DELETE FROM {0} WHERE {1}=@{1}", tableName, primaryKeyCoulmn);
+        }
+
+        public static string FindByIDQuery(string tableName, dynamic item)
+        {
+            PropertyInfo[] props = item.GetType().GetProperties();
+            string primaryKeyCoulmn = props.Where(s => s.GetCustomAttributes(typeof(PrimaryKey), true).Length > 0).Select(p => p.Name).FirstOrDefault();
+
+            return string.Format("SELECT * FROM {0} WHERE {1}=@{1}", tableName, primaryKeyCoulmn);
         }
 
         /// <summary>

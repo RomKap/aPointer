@@ -20,13 +20,5 @@ namespace Apt.Core.Domain.Appointments
 
        public DateTime? ModifiedOn { get; set; }
 
-    }
-
-   [AttributeUsage(AttributeTargets.Property)]
-   public class PrimaryKey : Attribute
-   {
-       public PrimaryKey()
-       {
-       }
-   }
+    }   
 }

@@ -1,0 +1,27 @@
+﻿ 
+ @using Apt.Core.Domain.Appointments
+ 
+ @model Appointee
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewAppointee</title>
+</head>
+<body>
+     <div>
+        @using (Html.BeginForm())
+        {
+        <div>
+        View Appointee Details <br />
+        First Name:   @Model.FirstName <br />
+        Last Name:  @Model.LastName <br />   
+      
+        </div>
+            
+        }
+    </div>
+</body>
+</html>

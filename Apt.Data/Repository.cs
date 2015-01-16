@@ -10,6 +10,7 @@ using System.Configuration;
 using Dapper;
 using RepoWrapper;
 using System.Linq.Expressions;
+using System.Reflection;
  
 
 namespace Apt.Data
@@ -76,6 +77,19 @@ namespace Apt.Data
            {
                cn.Open();
                item = cn.Query<T>("SELECT * FROM " + _tableName + " WHERE ID=@ID", new { ID = id }).SingleOrDefault();
+           }
+
+           return item;
+       }
+
+       public virtual T FindByID(T item)
+       {
+    
+           using (IDbConnection cn = Connection)
+           {
+               var parameters = (object)Mapping(item);
+               cn.Open();
+               item = cn.FindByID<T>(_tableName, parameters);
            }
 
            return item;

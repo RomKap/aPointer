@@ -19,6 +19,7 @@ namespace Apt.Services.Appointments
         void AddAppointee(Appointee aptee);
         void AddOther(dynamic item);
         void DelAppointee(Appointee aptee);
+        Appointee ViewAppointee(Appointee aptee);
         IRepository<Appointee> AppointeeRepo { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Apt.Core.Infrastructure
         void Remove(T item);     
         void Update(T item);
         T FindByID(Guid id);
+        T FindByID(T item);
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
         IEnumerable<T> FindAll();
     }

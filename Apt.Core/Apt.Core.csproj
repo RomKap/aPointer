@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="CommonHelper.cs" />
     <Compile Include="Domain\Appointments\Appointee.cs" />
     <Compile Include="Domain\Appointments\Appointer.cs" />
     <Compile Include="Domain\Appointments\Appointment.cs" />

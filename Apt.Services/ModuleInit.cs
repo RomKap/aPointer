@@ -17,9 +17,10 @@ namespace Apt.Services
         {
             //data
             registrar.RegisterType<IRepository<Appointee>, AppointeeRepository>();
+            registrar.RegisterType<IRepository<Appointer>, AppointerRepository>();
 
             //service
-            registrar.RegisterType<IAppointmentService, AppointmentService>();
+            registrar.RegisterType<IAppointmentService, AppointmentService>();  
         }
     }
 }

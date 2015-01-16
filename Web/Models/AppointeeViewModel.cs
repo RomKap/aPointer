@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Apt.Core.Domain.Appointments;
+using Apt.Core;
 
 namespace Web.Models
 {

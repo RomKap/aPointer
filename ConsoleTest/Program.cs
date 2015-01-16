@@ -1297,10 +1297,20 @@ namespace ConsoleTest
             BirhtDate bDate2 = new BirhtDate(new DateTime(2011, 3, 30));
             bool tempBdate = bDate1 == bDate2;
             Console.WriteLine("BirthDate Equal: {0}", tempBdate);
+
+            //--------- Lazy ---------
+
+            //Lazy<Guard> lzg = new Lazy<Guard>(p => { return (p.Prop1 == "some val"); });            
+             
         }
 
 
         #region Test classes
+
+        public class Guard
+        {
+            public string Prop1 { get; set; }
+        }
 
         static void dc_romHandler(object sender, Program.RomPropChangedEventArgs e)
         {
@@ -1318,6 +1328,7 @@ namespace ConsoleTest
         {
             public RomPropChangedEventArgs()
             {
+                
             }
         }
 
@@ -1395,8 +1406,6 @@ namespace ConsoleTest
                 }
             }
         }
-
-
 
         public enum SomeEnum
         {

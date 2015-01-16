@@ -12,7 +12,7 @@
         <div>
             @foreach (Apt.Core.Domain.Appointments.Appointee aptee in Model.lstAppointee)
             {
-                <div>@aptee.FirstName @aptee.LastName  @Html.ActionLink("Delete", "DelAppointee", "Home", new { ID = aptee.ApteeID }, null)  </div>
+                <div>@aptee.FirstName @aptee.LastName  @Html.ActionLink("Delete", "DelAppointee", "Appointment", new { ID = aptee.ApteeID }, null)  </div>
                 <br />
             }
         </div>

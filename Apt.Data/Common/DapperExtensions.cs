@@ -25,5 +25,11 @@ namespace Dapper
         {
             IEnumerable<T> result = SqlMapper.Query<T>(cnn, DynamicQuery.GetDeleteQuery(tableName, param), param);            
         }
+
+        public static T FindByID<T>(this IDbConnection cnn, string tableName, dynamic param)
+        {
+            IEnumerable<T> result = SqlMapper.Query<T>(cnn, DynamicQuery.FindByIDQuery(tableName, param), param);
+            return result.First();
+        }
     }
 }

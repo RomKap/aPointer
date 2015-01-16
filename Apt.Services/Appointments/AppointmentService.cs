@@ -16,6 +16,7 @@ namespace Apt.Services.Appointments
     public class AppointmentService : IAppointmentService
     {
         private IRepository<Appointee> _AppointeeRepo;
+        private IRepository<Appointer> _AppointerRepo;
 
         [Microsoft.Practices.Unity.Dependency]
         public IRepository<Appointee> AppointeeRepo {
@@ -29,10 +30,25 @@ namespace Apt.Services.Appointments
             }
         }
 
+        [Microsoft.Practices.Unity.Dependency]
+        public IRepository<Appointer> AppointerRepo
+        {
+            get
+            {
+                return _AppointerRepo;
+            }
+            set
+            {
+                _AppointerRepo = value;
+            }
+        }
+
         public AppointmentService()
         {
            // AppointeeRepo = new AppointeeRepository();
         }
+
+        #region Appointee
 
         public List<Appointee> GetAllAppointee()
         {
@@ -46,7 +62,6 @@ namespace Apt.Services.Appointments
         {
             _AppointeeRepo.Add(aptee);
         }
-
    
         public void AddOther(dynamic item)
         {
@@ -57,6 +72,20 @@ namespace Apt.Services.Appointments
         {
             _AppointeeRepo.Remove(aptee);
         }
+
+        public Appointee ViewAppointee(Appointee aptee)
+        {
+            return _AppointeeRepo.FindByID(aptee);
+        }
+        #endregion Appointee
+
+        #region Appointer
+
+        public void AddAppointer(Appointer apter)
+        {
+            _AppointerRepo.Add(apter);
+        }
+        #endregion Appointer
 
     }
 }

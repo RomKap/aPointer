@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Apt.Core.Domain.Appointments
 {
-    public partial class Appointer
+    public partial class Appointer : BaseEntity
     {
+        [PrimaryKey]
         public int ApterID { get; set; }
 
         public string FirstName { get; set; }

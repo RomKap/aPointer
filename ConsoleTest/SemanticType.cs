@@ -11,24 +11,24 @@ namespace ConsoleApp
         public T ObjValue { get; private set; }
 
         #region with FUNC
-        private static Func<T, bool> _isValid = v => true ;
+        //private static Func<T, bool> _isValid = v => true ;
 
-        public static Func<T, bool> IsValid
+        //public static Func<T, bool> IsValid
+        //{
+        //    get { return _isValid; }
+        //    protected set { _isValid = value; }
+        //}
+        #endregion
+
+        #region with delegate
+        public delegate bool isValidD(T dVal);
+        private static isValidD _isValid = v => true;
+
+        public static isValidD IsValid
         {
             get { return _isValid; }
             protected set { _isValid = value; }
         }
-        #endregion
-
-        #region with delegate
-        //delegate bool isValidD(T dVal);
-        //isValidD ivd;
-
-        //public static isValidD IsValidDProp
-        //{
-        //    get { return ivd; }
-        //    protected set { ivd = value; }
-        //}
         #endregion
 
         protected SemanticType(T value)
