@@ -15,9 +15,18 @@
         @using (Html.BeginForm())
         {
         <div>
-        View Appointee Details <br />
-        First Name:   @Model.FirstName <br />
-        Last Name:  @Model.LastName <br />   
+       
+         @if (ViewBag.IsPresent)
+         { 
+             <div>View Appointee Details  <br /><br />
+             
+             First Name:   @Model.FirstName <br />
+             Last Name:   @Model.LastName <br />  </div>
+         }
+         else
+         {
+             <div> Appointee does not exist !</div>
+         }        
       
         </div>
             

@@ -42,7 +42,10 @@ namespace Web.Controllers
             aptee.LastName = apvm.LastName;
             aptee.CreatedOn = DateTime.Now;
             aptee.ModifiedOn = DateTime.Now;
-            _AppointmentService.AddAppointee(aptee);
+            //_AppointmentService.AddAppointee(aptee);
+
+            //non common method (use dapper directly rahter than dapperextension)
+            _AppointmentService.AddDirect(aptee);
 
             return RedirectToAction("AllAppointee");
         }   
@@ -78,9 +81,17 @@ namespace Web.Controllers
             Appointee aptee = new Appointee();
             aptee.ApteeID = ID;
             aptee = _AppointmentService.ViewAppointee(aptee);
+
+            if (aptee == null)
+                ViewBag.IsPresent = false;
+            else
+                ViewBag.IsPresent = true;
+
             return View("../Appointments/ViewAppointee", aptee);
 
         }
+
+        
 
         #endregion Appointee
 

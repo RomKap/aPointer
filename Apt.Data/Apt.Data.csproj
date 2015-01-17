@@ -53,6 +53,7 @@
     <Compile Include="Common\DynamicQuery.cs" />
     <Compile Include="Common\QueryResult.cs" />
     <Compile Include="Domain\AppointeeRepository.cs" />
+    <Compile Include="Domain\IAppointeeRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
   </ItemGroup>

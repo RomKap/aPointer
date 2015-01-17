@@ -29,7 +29,12 @@ namespace Dapper
         public static T FindByID<T>(this IDbConnection cnn, string tableName, dynamic param)
         {
             IEnumerable<T> result = SqlMapper.Query<T>(cnn, DynamicQuery.FindByIDQuery(tableName, param), param);
-            return result.First();
+            if (result.Count() > 0)
+                return result.First();
+            else
+                return default(T);
+
+            //return ReferenceEquals(result, null) ? default(T) : result.First();
         }
     }
 }

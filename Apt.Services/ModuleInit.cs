@@ -16,7 +16,7 @@ namespace Apt.Services
         public void Initialize(IModuleRegistrar registrar)
         {
             //data
-            registrar.RegisterType<IRepository<Appointee>, AppointeeRepository>();
+            registrar.RegisterType<IAppointeeRepository<Appointee>, AppointeeRepository>();
             registrar.RegisterType<IRepository<Appointer>, AppointerRepository>();
 
             //service

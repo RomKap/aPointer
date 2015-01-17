@@ -15,11 +15,12 @@ namespace Apt.Services.Appointments
 {
     public class AppointmentService : IAppointmentService
     {
-        private IRepository<Appointee> _AppointeeRepo;
+        private IAppointeeRepository<Appointee> _AppointeeRepo;
         private IRepository<Appointer> _AppointerRepo;
 
         [Microsoft.Practices.Unity.Dependency]
-        public IRepository<Appointee> AppointeeRepo {
+        public IAppointeeRepository<Appointee> AppointeeRepo
+        {
             get
             {
                 return _AppointeeRepo;
@@ -62,10 +63,10 @@ namespace Apt.Services.Appointments
         {
             _AppointeeRepo.Add(aptee);
         }
-   
-        public void AddOther(dynamic item)
+
+        public void AddDirect(Appointee aptee)
         {
-            //throw new NotImplementedException();
+            _AppointeeRepo.AddDirect(aptee);
         }
 
         public void DelAppointee(Appointee aptee)

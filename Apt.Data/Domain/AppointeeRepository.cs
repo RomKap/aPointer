@@ -9,19 +9,17 @@ using System.Reflection;
 
 namespace Apt.Data.Domain
 {
-    public sealed class AppointeeRepository : Repository<Appointee>
+    public sealed class AppointeeRepository : Repository<Appointee>, IAppointeeRepository<Appointee>
     {
         public AppointeeRepository() : base("Appointee"){}
 
-        public void AddOther(dynamic ditem)
+        public void AddDirect(Appointee aptee)
         {
             using (IDbConnection cn = Connection)
             {   
-                string name = ditem.name;
-             
                 cn.Open();
                 string query = "insert into Appointer (FirstName, LastName) values (@FirstName, @LastName) ";
-                cn.Query<dynamic>(query, new { FirstName = ditem.FirstName, LastName = ditem.LastName });
+                cn.Query<dynamic>(query, new { FirstName = aptee.FirstName, LastName = aptee.LastName });
             }
         }
     }
