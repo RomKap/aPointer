@@ -7,19 +7,20 @@ using Apt.Core.Infrastructure;
 using Apt.Core.Domain.Appointments;
 using Rhino.Mocks;
 using Apt.Services.Appointments;
+using Apt.Data.Domain;
 
 namespace Apt.Services.Test.Appointments
 {
     [TestFixture]
     public class AppointmentServiceTests
     {
-        public IRepository<Appointee> _AppointeeRepo { get; set; }
+        public IAppointeeRepository<Appointee> _AppointeeRepo { get; set; }
         private IAppointmentService _AppointmentService;
 
         [SetUp]
         public new void SetUp()
         {
-            _AppointeeRepo = MockRepository.GenerateMock<IRepository<Appointee>>();
+            _AppointeeRepo = MockRepository.GenerateMock<IAppointeeRepository<Appointee>>();
 
             Appointee apt1 = new Appointee()
             {

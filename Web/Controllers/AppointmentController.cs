@@ -89,9 +89,7 @@ namespace Web.Controllers
 
             return View("../Appointments/ViewAppointee", aptee);
 
-        }
-
-        
+        }        
 
         #endregion Appointee
 

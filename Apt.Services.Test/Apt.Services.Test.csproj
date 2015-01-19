@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Apt.Core">
-      <HintPath>..\Apt.Core\bin\Debug\Apt.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Apt.Services, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Apt.Services\bin\Debug\Apt.Services.dll</HintPath>
@@ -57,7 +54,16 @@
     <Compile Include="Appointments\AppointmentServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Apt.Core\Apt.Core.csproj">
+      <Project>{ACE166EB-F826-431A-B4A5-591F738070F2}</Project>
+      <Name>Apt.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Apt.Data\Apt.Data.csproj">
+      <Project>{02025A55-DAA0-493E-8958-B501E1FFC9A5}</Project>
+      <Name>Apt.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

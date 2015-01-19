@@ -18,8 +18,8 @@ namespace Apt.Data.Domain
             using (IDbConnection cn = Connection)
             {   
                 cn.Open();
-                string query = "insert into Appointer (FirstName, LastName) values (@FirstName, @LastName) ";
-                cn.Query<dynamic>(query, new { FirstName = aptee.FirstName, LastName = aptee.LastName });
+                string query = "insert into Appointee (FirstName, LastName) values (@FirstName, @LastName) ";
+                cn.Query<Appointee>(query, new { FirstName = aptee.FirstName, LastName = aptee.LastName });
             }
         }
     }
