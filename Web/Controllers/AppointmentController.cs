@@ -42,10 +42,10 @@ namespace Web.Controllers
             aptee.LastName = apvm.LastName;
             aptee.CreatedOn = DateTime.Now;
             aptee.ModifiedOn = DateTime.Now;
-            //_AppointmentService.AddAppointee(aptee);
+            _AppointmentService.AddAppointee(aptee);
 
             //non common method (use dapper directly rahter than dapperextension)
-            _AppointmentService.AddDirect(aptee);
+            //_AppointmentService.AddDirect(aptee);
 
             return RedirectToAction("AllAppointee");
         }   

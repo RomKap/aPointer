@@ -13,6 +13,10 @@ namespace Apt.Core.Infrastructure
     public interface IModuleRegistrar
     {
         void RegisterType<TFrom, TTo>() where TTo : TFrom;
+        void RegisterType<TFrom>(string name, params InjectionMember[] injectionMembers);
+        //T Resolve<T>(this IUnityContainer container, string name, params ResolverOverride[] overrides);
+
+        void RegisterType<TFrom, TTo>(params InjectionMember[] injectionMembers) where TTo : TFrom;
     }
 
     public interface IModule
@@ -30,6 +34,16 @@ namespace Apt.Core.Infrastructure
         public void RegisterType<TFrom, TTo>() where TTo : TFrom
         {
             this._container.RegisterType<TFrom, TTo>();
+        }
+
+        public void RegisterType<TFrom>(string name, params InjectionMember[] injectionMembers)
+        {
+            this._container.RegisterType<TFrom>(name, injectionMembers);
+        }
+
+        public void RegisterType<TFrom, TTo>(params InjectionMember[] injectionMembers) where TTo : TFrom
+        {
+            this._container.RegisterType<TFrom, TTo>(injectionMembers);
         }
     }
 

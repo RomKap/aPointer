@@ -34,6 +34,9 @@ namespace Web.App_Start
         private static void RegisterDependencies(IUnityContainer container)
         {
             //container.RegisterType<IAppointmentService, AppointmentService>();
+            //container.RegisterType<object>("abd", new InjectionConstructor("Timmy"));
+            //container.RegisterType<object>(new InjectionConstructor(container.Resolve<object>("son"))); 
+            //container.RegisterType<object, object>(new InjectionProperty("SomeProperty",  "aaa"));
 
              ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll");
         }
