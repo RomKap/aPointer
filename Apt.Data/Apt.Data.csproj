@@ -53,17 +53,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AptDbContext.cs" />
-    <Compile Include="Common\Dapper.cs" />
-    <Compile Include="Common\DapperExtensions.cs" />
-    <Compile Include="Common\DynamicQuery.cs" />
-    <Compile Include="Common\QueryResult.cs" />
-    <Compile Include="Domain\AppointeeRepository.cs" />
-    <Compile Include="Domain\AppointeeRepositoryEF.cs" />
-    <Compile Include="Domain\IAppointeeRepository.cs" />
-    <Compile Include="IDbContext.cs" />
+    <Compile Include="Common\EntityFramework\AptDbContext.cs" />
+    <Compile Include="Common\Dapper\Dapper.cs" />
+    <Compile Include="Common\Dapper\DapperExtensions.cs" />
+    <Compile Include="Common\Dapper\DynamicQuery.cs" />
+    <Compile Include="Common\Dapper\QueryResult.cs" />
+    <Compile Include="Domain\CommonRepositoryDapper.cs" />
+    <Compile Include="Domain\CommonRepositoryEF.cs" />
+    <Compile Include="Domain\ICommonRepository.cs" />
+    <Compile Include="Common\EntityFramework\IDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
+    <Compile Include="RepositoryDapper.cs" />
     <Compile Include="RepositoryEF.cs" />
   </ItemGroup>
   <ItemGroup>

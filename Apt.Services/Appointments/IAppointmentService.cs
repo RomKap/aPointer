@@ -21,6 +21,6 @@ namespace Apt.Services.Appointments
         void AddDirect(Appointee aptee);
         void DelAppointee(Appointee aptee);
         Appointee ViewAppointee(Appointee aptee);
-        IAppointeeRepository<Appointee> AppointeeRepo { get; set; }
+        ICommonRepository<Appointee> AppointeeRepo { get; set; }
     }
 }

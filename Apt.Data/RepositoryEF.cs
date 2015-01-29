@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data;
 using System.Reflection;
+using Apt.Data.Common;
 
 namespace Apt.Data
 {

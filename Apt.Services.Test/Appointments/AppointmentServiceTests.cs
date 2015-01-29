@@ -14,13 +14,13 @@ namespace Apt.Services.Test.Appointments
     [TestFixture]
     public class AppointmentServiceTests
     {
-        public IAppointeeRepository<Appointee> _AppointeeRepo { get; set; }
+        public ICommonRepository<Appointee> _AppointeeRepo { get; set; }
         private IAppointmentService _AppointmentService;
 
         [SetUp]
         public new void SetUp()
         {
-            _AppointeeRepo = MockRepository.GenerateMock<IAppointeeRepository<Appointee>>();
+            _AppointeeRepo = MockRepository.GenerateMock<ICommonRepository<Appointee>>();
 
             Appointee apt1 = new Appointee()
             {

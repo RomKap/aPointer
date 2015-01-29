@@ -15,7 +15,7 @@ using System.Reflection;
 
 namespace Apt.Data
 {
-    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class RepositoryDapper<T> : IRepository<T> where T : BaseEntity
     {
        private readonly string _tableName;
 
@@ -27,7 +27,7 @@ namespace Apt.Data
            }
        }
 
-       public Repository(string tableName)
+       public RepositoryDapper(string tableName)
        {
            _tableName = tableName;
        }
@@ -83,8 +83,7 @@ namespace Apt.Data
        }
 
        public virtual T FindByID(T item)
-       {
-    
+       {    
            using (IDbConnection cn = Connection)
            {
                var parameters = (object)Mapping(item);

@@ -10,6 +10,7 @@ using Apt.Data.Domain;
 using System.Data.Entity;
 using Apt.Data;
 using Microsoft.Practices.Unity;
+using Apt.Data.Common;
 
 namespace Apt.Services
 {
@@ -17,19 +18,18 @@ namespace Apt.Services
     public class ModuleInit : IModule
     {
         public void Initialize(IModuleRegistrar registrar)
-        {
-            //wihtout EF (with Dapper)
-            registrar.RegisterType<IAppointeeRepository<Appointee>, AppointeeRepository>();        
-            registrar.RegisterType<IRepository<Appointer>, AppointerRepository>();
+        {   
+            //********* un-comment only usable repositories *********
 
-            //with EF
-            //registrar.RegisterType<IDbContext, AptDbContext>(new InjectionConstructor("server=FORD\\sqlExpress;database=AppointDB;Trusted_Connection=True;"));
-            //registrar.RegisterType<IAppointeeRepository<Appointee>, AppointeeRepositoryEF>();
+            //with MicroORM (Dapper)
+            registrar.RegisterType<ICommonRepository<Appointee>, AppointeeRepository>();
+            registrar.RegisterType<ICommonRepository<Appointer>, AppointerRepository>();
 
-            //service
-            registrar.RegisterType<IAppointmentService, AppointmentService>();    
-
-    
+            //with Entity Framework
+            registrar.RegisterType<IDbContext, AptDbContext>(new InjectionConstructor("server=FORD\\sqlExpress;database=AppointDB;Trusted_Connection=True;"));
+            registrar.RegisterType<ICommonRepository<Appointee>, CommonRepositoryEF<Appointee>>();
+            registrar.RegisterType<ICommonRepository<Appointer>, CommonRepositoryEF<Appointer>>();
+              
         }
     }
 }

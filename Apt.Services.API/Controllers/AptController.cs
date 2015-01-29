@@ -12,10 +12,10 @@ namespace Apt.Services.API
     public class AptController : ApiController
     {    
 
-        private IAppointeeRepository<Appointee> _AppointeeRepo;
+        private ICommonRepository<Appointee> _AppointeeRepo;
 
         [Microsoft.Practices.Unity.Dependency]
-        public IAppointeeRepository<Appointee> AppointeeRepo
+        public ICommonRepository<Appointee> AppointeeRepo
         {
             get
             {

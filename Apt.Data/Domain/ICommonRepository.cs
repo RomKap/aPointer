@@ -8,7 +8,7 @@ using Apt.Core;
 
 namespace Apt.Data.Domain
 {
-    public interface IAppointeeRepository<T> : IRepository<T> where T : BaseEntity 
+    public interface ICommonRepository<T> : IRepository<T> where T : BaseEntity 
     {
         void AddDirect(T item);
     }

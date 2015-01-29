@@ -49,20 +49,28 @@ namespace Apt.Core.Infrastructure
 
     public static class ModuleLoader
     {
+        /// <summary>
+        /// Load the container
+        /// </summary>
+        /// <param name="container">Unity container</param>
+        /// <param name="path">path of the folder</param>
+        /// <param name="pattern">comma seperated assemblies</param>
         public static void LoadContainer(IUnityContainer container, string path, string pattern)
         {
-            var dirCat = new DirectoryCatalog(path, pattern);
-            var importDef = BuildImportDefinition();
+            string[] arrPattern = pattern.Split(',');
+            ImportDefinition importDef = BuildImportDefinition();
             try
             {
-                using (var aggregateCatalog = new AggregateCatalog())
-                {
-                    aggregateCatalog.Catalogs.Add(dirCat);
-                    using (var componsitionContainer = new CompositionContainer(aggregateCatalog))
+                using (AggregateCatalog aggregateCatalog = new AggregateCatalog())
+                {                   
+                    foreach (string strPattern in arrPattern)                                      
+                        aggregateCatalog.Catalogs.Add(new DirectoryCatalog(path, strPattern));                               
+
+                    using (CompositionContainer componsitionContainer = new CompositionContainer(aggregateCatalog))
                     {
                         IEnumerable<Export> exports = componsitionContainer.GetExports(importDef);
                         IEnumerable<IModule> modules = exports.Select(export => export.Value as IModule).Where(m => m != null);
-                        var registrar = new ModuleRegistrar(container);
+                        ModuleRegistrar registrar = new ModuleRegistrar(container);
                         foreach (IModule module in modules)
                         {
                             module.Initialize(registrar);

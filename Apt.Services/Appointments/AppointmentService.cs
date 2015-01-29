@@ -15,11 +15,11 @@ namespace Apt.Services.Appointments
 {
     public class AppointmentService : IAppointmentService
     {
-        private IAppointeeRepository<Appointee> _AppointeeRepo;
-        private IRepository<Appointer> _AppointerRepo;
+        private ICommonRepository<Appointee> _AppointeeRepo;
+        private ICommonRepository<Appointer> _AppointerRepo;
 
         [Microsoft.Practices.Unity.Dependency]
-        public IAppointeeRepository<Appointee> AppointeeRepo
+        public ICommonRepository<Appointee> AppointeeRepo
         {
             get
             {
@@ -32,7 +32,7 @@ namespace Apt.Services.Appointments
         }
 
         [Microsoft.Practices.Unity.Dependency]
-        public IRepository<Appointer> AppointerRepo
+        public ICommonRepository<Appointer> AppointerRepo
         {
             get
             {

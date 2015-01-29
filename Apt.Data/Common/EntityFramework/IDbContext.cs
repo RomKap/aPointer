@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.Entity;
 using Apt.Core;
 
-namespace Apt.Data
+namespace Apt.Data.Common
 {
     public interface IDbContext
     {

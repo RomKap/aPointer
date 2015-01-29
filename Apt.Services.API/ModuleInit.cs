@@ -7,6 +7,8 @@ using Apt.Core.Infrastructure;
 
 using Apt.Core.Domain.Appointments;
 using Apt.Data.Domain;
+using Apt.Data.Common;
+using Microsoft.Practices.Unity;
 
 namespace Apt.Services
 {
@@ -15,12 +17,16 @@ namespace Apt.Services
     {
         public void Initialize(IModuleRegistrar registrar)
         {
-            //data
-            registrar.RegisterType<IAppointeeRepository<Appointee>, AppointeeRepository>();
-            //registrar.RegisterType<IRepository<Appointer>, AppointerRepository>();
+            //********* un-comment only usable repositories *********
 
-            //service
-            //registrar.RegisterType<IAppointmentService, AppointmentService>();  
+            //with MicroORM (Dapper)
+            registrar.RegisterType<ICommonRepository<Appointee>, AppointeeRepository>();
+            registrar.RegisterType<ICommonRepository<Appointer>, AppointerRepository>();
+
+            //with Entity Framework
+            //registrar.RegisterType<IDbContext, AptDbContext>(new InjectionConstructor("server=FORD\\sqlExpress;database=AppointDB;Trusted_Connection=True;"));
+            //registrar.RegisterType<ICommonRepository<Appointee>, CommonRepositoryEF<Appointee>>();
+            //registrar.RegisterType<ICommonRepository<Appointer>, CommonRepositoryEF<Appointer>>();
         }
     }
 }

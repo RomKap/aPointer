@@ -38,7 +38,7 @@ namespace Web.App_Start
             //container.RegisterType<object>(new InjectionConstructor(container.Resolve<object>("son"))); 
             //container.RegisterType<object, object>(new InjectionProperty("SomeProperty",  "aaa"));
 
-             ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll");
+             ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll,Web.dll");
         }
     }
 }

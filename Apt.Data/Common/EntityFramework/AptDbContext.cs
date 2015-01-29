@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.Entity;
 using Apt.Core.Domain.Appointments;
 
-namespace Apt.Data
+namespace Apt.Data.Common
 {
     public class AptDbContext : DbContext, IDbContext  
     {

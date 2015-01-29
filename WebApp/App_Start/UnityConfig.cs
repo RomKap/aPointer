@@ -34,7 +34,7 @@ namespace WebApp.App_Start
 		{
             //container.RegisterType<IAppointmentService, AppointmentService>();
 
-            ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll");
+            ModuleLoader.LoadContainer(container, ".\\bin", "Apt.*.dll,WebApp.dll");
 		}
 	}
 }
