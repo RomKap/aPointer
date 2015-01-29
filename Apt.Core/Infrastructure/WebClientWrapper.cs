@@ -38,6 +38,11 @@ namespace Apt.Core.Infrastructure
             return JsonConvert.DeserializeObject<List<T>>(Client().DownloadString(_baseUrl + '/' + urlSegment.TrimStart('/')));
         }
 
+        protected void Del<T>(string urlSegment)
+        {
+            JsonConvert.DeserializeObject<T>(Client().DownloadString(_baseUrl + '/' + urlSegment.TrimStart('/')));
+        }
+
         ~WebClientWrapperBase()
         {
             Dispose(false);

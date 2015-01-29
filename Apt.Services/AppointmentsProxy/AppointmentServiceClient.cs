@@ -29,7 +29,7 @@ namespace Apt.Services.AppointmentsProxy
 
         public void AddAppointee(Appointee aptee)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void AddDirect(Appointee aptee)
@@ -39,7 +39,7 @@ namespace Apt.Services.AppointmentsProxy
 
         public void DelAppointee(Appointee aptee)
         {
-            throw new NotImplementedException();
+            Del<Appointee>("DelAppointee/" + aptee.ApteeID);
         }
 
         public Appointee ViewAppointee(Appointee aptee)
