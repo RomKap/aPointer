@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppointmentsProxy\AppointmentServiceClient.cs" />
     <Compile Include="Appointments\AppointmentService.cs" />
     <Compile Include="Appointments\IAppointmentService.cs" />
     <Compile Include="Appointments\IScheduleService.cs" />

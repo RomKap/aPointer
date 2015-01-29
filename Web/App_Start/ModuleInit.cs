@@ -6,6 +6,8 @@ using System.ComponentModel.Composition;
 using Apt.Core.Infrastructure;
 
 using Apt.Services.Appointments;
+using Apt.Services.AppointmentsProxy;
+using Microsoft.Practices.Unity;
 
 namespace Web.App_Start
 {
@@ -13,9 +15,13 @@ namespace Web.App_Start
     public class ModuleInit : IModule
     {
         public void Initialize(IModuleRegistrar registrar)
-        {
-            //HttpContext.Current.Response.Write("<br>Initialize Web");
-            registrar.RegisterType<IAppointmentService, AppointmentService>();   
+        {      
+            //from dll
+            //registrar.RegisterType<IAppointmentService, AppointmentService>();
+
+            //api
+            registrar.RegisterType<IAppointmentService, AppointmentServiceClient>(new InjectionConstructor("http://localhost/aPointerAPI/api/Apt/"));
+            registrar.RegisterType<IAppointmentService, AppointmentServiceClient>();   
         }
     }
 }
