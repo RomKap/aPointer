@@ -21,6 +21,7 @@ namespace Web.App_Start
 
             //api
             registrar.RegisterType<IAppointmentService, AppointmentServiceClient>(new InjectionConstructor("http://localhost/aPointerAPI/api/Apt/"));
+            //registrar.RegisterType<IAppointmentService, AppointmentServiceClient>(new InjectionConstructor("http://localhost:5977/api/Apt/"));
             registrar.RegisterType<IAppointmentService, AppointmentServiceClient>();   
         }
     }

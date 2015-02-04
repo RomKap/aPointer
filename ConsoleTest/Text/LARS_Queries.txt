@@ -1,0 +1,325 @@
+
+----------------------------------------
+
+SELECT @@IDENTITY
+SELECT SCOPE_IDENTITY()
+SELECT IDENT_CURRENT('ObservRequest')
+
+----------------------------------------------
+
+select *,(select AreaName from AuditArea where areaID=ControlPlan.AuditArea)as AuditAreaName,
+(select Fname+' '+Lname from users where userID=ControlPlan.Auditor)as LeadAuditor,
+(select sbuName from SBU where sbuID=ControlPlan.sbuID)as SBUName,
+(select LocationName from Location where LocationID=ControlPlan.LocationID)as LocationName from ControlPlan 
+
+
+select * from QAuditSchedule QA 
+Inner join ControlPlan on ControlPlan.AuditSCID=QA.AuditSCID 
+Inner join AuditArea on AuditArea.areaID=QA.areaID 
+Inner join SBU on SBU.sbuID=AuditArea.sbuID 
+Inner join Location on Location.LocationID=QA.LocationID 
+
+select ObservRequest.ObservTitle, ORA.ActionPlanResponseStatus, ObservRequest.AuditeeSentDate, ObservRequest.ObservReqID, CP.PlanID, CP.DocRefNo, 
+QA.Financialyear, AuditArea.AreaName, SBU.SBUName, Location.LocationName,
+users.userid as LeadAuditor, users.fname+' '+users.lname as LeadAuditorName ,
+dbo.FunConcatSupportAuditor(QA.AuditSCID) as SupportAuditor,
+dbo.FunConcatObservRequestEscalatorIDS(recID,1) as Esc1,  dbo.FunConcatObservRequestEscalator(recID,1) as Esc1Name,
+dbo.FunConcatObservRequestEscalatorIDS(recID,2) as Esc2,  dbo.FunConcatObservRequestEscalator(recID,2) as Esc2Name,
+dbo.FunConcatObservRequestEscalatorIDS(recID,3) as Esc3,  dbo.FunConcatObservRequestEscalator(recID,3) as Esc3Name 
+from ObservRequestActivity ORA
+inner join ObservRequest on ObservRequest.ObservReqID=ORA.ObservReqID
+inner join ControlPlan CP on CP.PlanID=ObservRequest.PlanID
+inner join QAuditSchedule QA on CP.AuditSCID=QA.AuditSCID
+inner join Location on Location.LocationID=QA.LocationID
+inner join AuditArea on AuditArea.AreaID=QA.AreaID
+inner join SBU on SBU.SBUID=AuditArea.SBUID
+inner join users on users.userid=QA.LeadAuditor
+
+where ObservRequest.active=1
+order by ObservRequest.AuditeeSentDate desc
+select aa.AreaName, ua.userid as AuditorID,  ua.EmpId, ua.pwd as pwd, ua.fname+' '+ua.lname as AuditorName, * from QAuditSchedule QA 
+Inner join ControlPlan cp on cp.AuditSCID=QA.AuditSCID 
+Inner join AuditArea aa on aa.areaID=QA.areaID 
+Inner join SBU on SBU.sbuID=aa.sbuID 
+Inner join Location on Location.LocationID=QA.LocationID 
+Inner join users ua on ua.userid=QA.LeadAuditor 
+where 1=1
+and cp.PlanID in (select planID from ObservRequest where ObservReqID not in(select ObservReqID From GetCompletedObservations()))
+ 
+
+select EmpCode,sbuId,(case rownum when 1 then EmpCode  else '' end) as SBUNAME from (
+select userid,EmpCode,sbuId,
+ rownum = ROW_NUMBER() OVER (PARTITION BY sbuId Order by userid) from users where sbuid<>0
+) abc
+
+
+
+ 
+SELECT
+CASE OBJECTPROPERTY(OBJECT_ID('TRG_INSUPD_DORENTRY'), 'ExecIsTriggerDisabled')
+WHEN 0 THEN 'ENABLED'
+ELSE 'DISABLED'
+END
+
+SELECT name, is_disabled FROM sys.triggers
+
+----- Enable/Disable Trigger ---
+
+Disable Trigger TRG_INSUPD_DORMATERIALS on dormaterials
+Enable Trigger TRG_INSUPD_DORMATERIALS on dormaterials
+
+
+----- To check who2 ------------
+
+CREATE TABLE #whoTable (
+        SPID INT,
+        Status VARCHAR(MAX),
+        LOGIN VARCHAR(MAX),
+        HostName VARCHAR(MAX),
+        BlkBy VARCHAR(MAX),
+        DBName VARCHAR(MAX),
+        Command VARCHAR(MAX),
+        CPUTime INT,
+        DiskIO INT,
+        LastBatch VARCHAR(MAX),
+        ProgramName VARCHAR(MAX),
+        SPID_1 INT,
+        REQUESTID INT
+)
+
+INSERT INTO #whoTable EXEC sp_who2
+
+SELECT  * FROM    #whoTable WHERE DBName='TATAVSS_28Dec2011-TEST'
+
+Drop Table #whoTable
+
+
+ SELECT * FROM master..sysprocesses where spid=104 order by cpu desc
+ SELECT * FROM master..sysprocesses WHERE status ='runnable' ORDER BY cpu desc
+ SELECT * FROM master..sysprocesses   order by physical_io desc
+ 
+ DBCC INPUTBUFFER(104) 
+
+Disable Trigger TRG_INSUPD_DORMATERIALS on dormaterials
+ Enable Trigger TRG_INSUPD_DORMATERIALS on dormaterials
+ 
+ 
+ EXEC sp_configure 'nested triggers'
+ 
+ EXEC sp_dboption 'TATAVSS_28Dec2011-TEST', 'recursive triggers'
+ 
+ EXEC sp_dboption 'TATAVSS_28Dec2011-TEST', 'recursive triggers', 'false'
+
+
+ started running the following, althought I had not a lot of expectation because we use quite a few of stored procedures:
+DBCC FREESYSTEMCACHE ('ALL');
+DBCC FREESESSIONCACHE
+DBCC FREEPROCCACHE
+DBCC DROPCLEANBUFFERS
+
+I executed the following query to see all connections opened:
+
+SELECT
+spid,status,sid,hostname,program_name,cmd,cpu,physical_io,blocked,dbid,
+convert(sysname, rtrim(loginame)) as loginname,spid as 'spid_sort', 
+substring( convert(varchar,last_batch,111) ,6 ,5 ) + ' ' + substring( convert(varchar,last_batch,113) ,13 ,8 ) as 'last_batch_char',last_batch, DB_NAME(dbid)
+from master.dbo.sysprocesses (nolock)
+order by loginname
+
+-----------------------------------------------
+Join and Apply 
+
+
+SELECT * FROM  [dbo].[Profile] AS [Extent1]
+CROSS APPLY  (SELECT TOP (1) [Extent2].[ProfileID] AS [ProfileID] FROM [dbo].[ProfileImage] AS [Extent2] 
+WHERE [Extent2].[ProfileID] = [Extent1].[ProfileID] ) AS [Element1] 
+WHERE [Extent1].[ProfileID] = [Element1].[ProfileID]
+ORDER BY [Extent1].[ProfileID] ASC
+ 
+ 
+SELECT * FROM  [dbo].[Profile] AS [Extent1]
+OUTER  APPLY  (SELECT  TOP (1) [Extent2].[ProfileID] AS [ProfileID] FROM [dbo].[ProfileImage] AS [Extent2] 
+WHERE [Extent2].[ProfileID] = [Extent1].[ProfileID] ) AS [Element1]
+ WHERE  [Element1].[ProfileID] is null
+ORDER BY [Extent1].[ProfileID] ASC
+
+select  * from  Profile   
+inner join  (SELECT  ProfileID  FROM  ProfileImage  group by  ProfileID ) as pimg on
+Profile.ProfileID = pimg.ProfileID  
+ORDER BY Profile.ProfileID ASC
+
+select  * from  Profile   
+left join  (SELECT  ProfileID  FROM  ProfileImage  group by  ProfileID ) as pimg on
+Profile.ProfileID = pimg.ProfileID  
+ where  pimg.ProfileID  is null 
+ORDER BY Profile.ProfileID ASC
+
+
+
+select dob,* from Profile where Gender='Male' 
+and datediff(yyyy,dob,getdate()) >= 18 and datediff(yyyy,dob,getdate()) <=28
+
+
+----------
+
+
+ SELECT  [Extent1].[AddedOn], *
+FROM  [dbo].[MM_Profile] AS [Extent1]
+CROSS APPLY  (SELECT TOP (1) *
+	FROM [dbo].[MM_ProfileUpgradationRequest] AS [Extent2]
+	WHERE ([Extent2].[ProfileID] = [Extent1].[ProfileID]) AND (1 =  CAST( [Extent2].[MembershipActivated] AS int))
+	AND ([Extent2].[IsOffer] = 1)
+	) AS [Element1]
+WHERE 
+ (2 <> [Extent1].[ProfileStatus]) 
+ AND (3 <> [Extent1].[ProfileStatus])
+ AND ([Extent1].[PlanID] = 2) 
+AND ((convert (datetime2, convert(varchar(255), [Extent1].[MembershipActivatedDate], 102) ,  102)) >= (convert (datetime, convert(varchar(255), '7/1/2013 12:00:00 AM', 102) ,  102))) 
+ AND ((convert (datetime2, convert(varchar(255), [Extent1].[MembershipActivatedDate], 102) ,  102)) <= (convert (datetime, convert(varchar(255), '8/31/2013 12:00:00 AM', 102) ,  102))) 
+ --AND ((convert (datetime2, convert(varchar(255), [Extent1].[AddedOn], 102) ,  102)) < (convert (datetime, convert(varchar(255), '7/1/2013 12:00:00 AM', 102) ,  102)))
+
+ AND ([Extent1].[ProfileID] = [Element1].[ProfileID]) 
+
+
+
+select * from MM_Profile P
+cross apply (
+select top 1 * from MM_ProfileUpgradationRequest PU where PU.ProfileID=P.ProfileID and PU.MembershipActivated=1 and PU.IsOffer=1 
+order by IsOffer desc
+) ext1
+
+where P.ProfileID=4937
+
+
+------------------------
+
+--To detect and delete duplicate rows
+
+ WITH CTE_Dup AS
+ (
+ SELECT*,
+ ROW_NUMBER()OVER (PARTITION BY PlanActivityID ORDER BY PlanActivityID)
+AS ROW_NO
+from ControlPlanFieldWorksTemp
+)
+ select * from CTE_Dup where ROW_NO>1;
+ --DELETE FROM CTE_Dup WHERE ROW_NO > 1;
+
+
+-- to update 
+
+ with CTE as
+ (
+  select  Max(PlanFieldWorkID) as  PlanFieldWorkID, PlanActivityID , count(*) as cnt from ControlPlanFieldWorks 
+ group by PlanActivityID
+  having count(*) >1
+ )  
+ update ControlPlanFieldWorks set LastModifiedBy=90 
+ from ControlPlanFieldWorks
+ inner join CTE on CTE.PlanFieldWorkID=ControlPlanFieldWorks.PlanFieldWorkID
+
+
+-------------------------------------------
+-- Find all the procedures and views containing column userid
+
+ select obj.name as Sp_Name, sc.definition as Sp_Text from sys.all_sql_modules sc
+ inner join sys.objects obj on obj.object_id=sc.object_id
+ where sc.definition like '%planid%'
+ and ( obj.type='p' OR  obj.type='v')
+  order by obj.name
+
+OR 
+
+ select obj.name as Sp_Name, sc.text as Sp_Text from sys.syscomments sc
+ inner join sys.objects obj on obj.object_id=sc.id
+ where sc.Text like '%planid%'
+ and ( obj.type='p' OR  obj.type='v')
+ order by obj.name
+
+-- with INFORMATION_SCHEMA
+
+select ROUTINE_TYPE, ROUTINE_NAME, ROUTINE_DEFINITION from information_schema.Routines
+where ROUTINE_DEFINITION like '%planid%'
+union
+select 'VIEW', TABLE_NAME, VIEW_DEFINITION from information_schema.views
+where VIEW_DEFINITION  like '%planid%'
+
+-- To see on which tables and columns a procedure or view depends
+  
+sp_depends 'SP_Rating'
+
+------------------------------------------------------------
+declare @RunDate datetime
+declare @strChecklistID varchar(800)
+
+set @RunDate= dateadd(day, 1, getdate()) ;
+set @strChecklistID = '8,12,33'; 
+
+select ChecklistID, FrequencyType, StartDate, @RunDate as RunDate, datediff(month, StartDate, @RunDate) as TestDiff  
+from CheckList where ChecklistID in 
+(case when FrequencyType=1 then ChecklistID
+when (FrequencyType=2 and (datediff(day, StartDate, @RunDate) % 7) = 0) then ChecklistID
+when (FrequencyType=3 and (datediff(day, StartDate, @RunDate) % 15) = 0) then ChecklistID
+end)
+and active=1 
+and FrequencyType not in (1,2,3)
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+CREATE PROCEDURE [dbo].[SP_InsertChecklist_New] @strChecklistID varchar(800), @RunDate datetime, @FinancialYear varchar(20) 
+AS
+BEGIN
+	--For specified locations
+	insert into CheckListStoreMain (CompanyID, ChecklistDate, FinancialYear, LocationID, ManagerID)		
+	select distinct Location.CompanyID, @RunDate, @FinancialYear, Location.locationID, Users.userID 
+	from Location 
+	inner join ChecklistFor on ChecklistFor.EntityID=Location.BrandID and ChecklistFor.EntityID<>0
+	inner join UsersWiseLocation UWL on UWL.LocationID=Location.LocationID 
+	inner join Users on Users.userID=UWL.userID and Users.Role=6 and Users.Active=1
+	where ChecklistFor.ChecklistID in ( Select ID From dbo.FunSplitter(@strChecklistID) )
+	and NOT Exists (select 1 from CheckListStoreMain T2 
+	where day(T2.ChecklistDate)=day(@RunDate) and month(T2.ChecklistDate)=month(@RunDate)
+	and year(T2.ChecklistDate)=year(@RunDate) and T2.LocationID=Location.LocationID );	
+	
+	--For all locations
+	insert into CheckListStoreMain (CompanyID, ChecklistDate, FinancialYear, LocationID, ManagerID)		
+	select distinct Location.CompanyID, @RunDate, @FinancialYear, Location.locationID, Users.userID 
+	from Location 
+	inner join ChecklistFor on ChecklistFor.EntityID=0
+	inner join UsersWiseLocation UWL on UWL.LocationID=Location.LocationID 
+	inner join Users on Users.userID=UWL.userID and Users.Role=6 and Users.Active=1
+	where ChecklistFor.ChecklistID in ( Select ID From dbo.FunSplitter(@strChecklistID) )
+	and NOT Exists (select 1 from CheckListStoreMain T2 
+	where day(T2.ChecklistDate)=day(@RunDate) and month(T2.ChecklistDate)=month(@RunDate)
+	and year(T2.ChecklistDate)=year(@RunDate) and T2.LocationID=Location.LocationID ) 	
+	
+	--Checkliststore
+	insert into CheckListStore (CompanyID, CheckListStoreMainID, ChecklistID) 
+	select distinct CheckListStoreMain.companyID, CheckListStoreMain.CheckListStoreMainID, ID as ChecklistID 
+	from CheckListStoreMain
+	cross join (Select ID From dbo.FunSplitter(@strChecklistID)) as tbl  
+	where day(ChecklistDate)=day(@RunDate) and month(ChecklistDate)=month(@RunDate) and year(ChecklistDate)=year(@RunDate)
+	and NOT Exists (select 1 from CheckListStore where CheckListStoreMainID=CheckListStoreMain.CheckListStoreMainID and checklistID=tbl.ID)
+	 	 
+END
+-----------------------------------------------------------------
+
+WITH CTE
+     AS (
+        SELECT MIN(X) AS FirstValueOnPage, MAX(X) AS LastValueOnPage, COUNT(*) AS Count,
+         page_id, MIN(page_id) OVER () AS FirstPage, MAX(page_id) OVER () AS LastPage 
+        FROM T
+        CROSS APPLY sys.fn_PhysLocCracker( %% physloc %% )
+        GROUP  BY file_id, page_id
+                   )
+SELECT FirstValueOnPage + ' to ' + LastValueOnPage AS PageRange,
+       page_id,
+       CAST(SPACE(50* ( page_id - FirstPage ) / ( LastPage - FirstPage )) + 'X' AS VARCHAR(51))
+FROM   CTE
+ORDER  BY FirstValueOnPage, page_id;  
+          
+SELECT * FROM T
+CROSS APPLY sys.fn_PhysLocCracker(%%physloc%%)
+order by page_id 

@@ -29,7 +29,7 @@ namespace Apt.Services.AppointmentsProxy
 
         public void AddAppointee(Appointee aptee)
         {
-            
+            PostValues<Appointee>("AddAppointee", aptee);
         }
 
         public void AddDirect(Appointee aptee)

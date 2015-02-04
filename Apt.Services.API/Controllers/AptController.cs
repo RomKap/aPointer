@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Http;
 using Apt.Core.Domain.Appointments;
 using Apt.Data.Domain;
+using Apt.Services.API.Models;
 
 namespace Apt.Services.API
 {
@@ -45,12 +46,13 @@ namespace Apt.Services.API
             return lst;
         }
 
-        [System.Web.Http.HttpGet]
-        public void AddAppointee(string FirstName, string LastName)
+        [System.Web.Http.HttpPost]
+        public void AddAppointee(AppointeModel apteem) 
         {
+            var context = HttpContext.Current;
             Appointee aptee = new Appointee();
-            aptee.FirstName = FirstName;
-            aptee.LastName = LastName;
+            aptee.FirstName = apteem.FirstName;
+            aptee.LastName = apteem.LastName;
             aptee.CreatedOn = DateTime.Now;
             aptee.ModifiedOn = DateTime.Now;
 

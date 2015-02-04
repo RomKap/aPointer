@@ -1,0 +1,301 @@
+
+
+select * from ControlPlanActivityMain where PlanID=257
+select * from ControlPlanRisk where PlanID=257
+select * from ControlPlanActivity where PlanID=257
+select * from ControlPlanActivityField  where PlanID=257 
+
+select * from ControlPlanActivityMainTemp where PlanID=257
+select * from ControlPlanRiskTemp where PlanID=257
+select * from ControlPlanActivityTemp  where PlanID=257 
+select * from ControlPlanActivityFieldTemp  where PlanID=257
+
+
+-- Delete from ControlPlanActivityMain where PlanID=257 
+-- Delete from ControlPlanRisk where PlanID=257 
+-- Delete from ControlPlanActivity where PlanID=257 
+-- Delete from ControlPlanActivityField where PlanID=257 
+ 
+--update ControlPlan Set IsReview=0, FirstReview=0 where PlanID=257
+
+-- Delete from ControlPlanActivityMainTemp where PlanID=257 
+-- Delete from ControlPlanRiskTemp where PlanID=257 
+-- Delete from ControlPlanActivityTemp where PlanID=257 
+-- Delete from ControlPlanActivityFieldTemp where PlanID=257 
+-- delete from LogsControlPlanActivityMain where PlanID=257
+-- delete from LogsControlPlanRisk where PlanID=257
+-- delete from LogsControlPlanActivity where PlanID=257
+-- delete from LogsControlPlanActivityField where PlanID=257
+
+
+select *  from RepositoryMain where RepID=76
+select *  from RepositoryRisk where RepID=76
+select *  from RepositoryActivity where RepID=76
+select *  from RepositoryActivityField where RepID=76
+
+select *  from RepositoryMainTemp where RepTempID=76
+select *  from RepositoryRiskTemp where RepTempID=76
+select *  from RepositoryActivityTemp where RepTempID=76
+select *  from RepositoryActivityFieldTemp where RepTempID=76
+
+--delete  from RepositoryMain where RepID=76
+--delete  from RepositoryRisk where RepID=76
+--delete  from RepositoryActivity where RepID=76
+--delete  from RepositoryActivityField where RepID=76
+
+--delete  from RepositoryMainTemp where RepTempID=76
+--delete  from RepositoryRiskTemp where RepTempID=76
+--delete  from RepositoryActivityTemp where RepTempID=76
+--delete  from RepositoryActivityFieldTemp where RepTempID=76 
+
+----------------------------------------
+
+SELECT @@IDENTITY
+SELECT SCOPE_IDENTITY()
+SELECT IDENT_CURRENT('ObservRequest')
+
+----------------------------------------------
+
+http://gnbintranet10.godrej.com/lars/ReminderEmail.aspx?remdate=05/06/2013&send=yes
+
+----------------------------------------------
+
+ SELECT * INTO tmptest_ObservType FROM ObservType
+
+----------------------------
+select
+(select count (PlanActivityID) from ControlPlanActivity  where PlanID=ControlPlan.PlanID and IsDelete=0 ) as FWTotalCount, 
+(select count (PlanActivityID) from ControlPlanActivity  where (isNull(ReviewStatus,0)= 0 OR isNull(ReviewStatus,0)=2) 
+and IsCompleted<>1 and PlanID=ControlPlan.PlanID and IsDelete=0 ) as FWPendingReviewCount, 
+(select count (PlanActivityID) from ControlPlanActivity where ReviewStatus= 3 and PlanID=ControlPlan.PlanID and IsDelete=0 ) as FWSentForRevieweCount,
+(select count (PlanActivityID) from ControlPlanActivity where ReviewStatus= 1 and PlanID=ControlPlan.PlanID and IsDelete=0 ) as FWReviewedCount 
+from ControlPlan
+where PlanID=285
+
+---------------------------------------------------
+
+set implicit_transactions off
+
+
+
+USE [LARS]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_CopyAuditProg_TempToMain]    Script Date: 09/04/2012 20:38:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- This procedure inserts the rows from main tables to the temperory tables of ControlPlan
+-- ControlPlanActivityMainTemp --> ControlPlanActivityMain
+-- ControlPlanRiskTemp --> ControlPlanRisk
+-- ControlPlanActivityTemp --> ControlPlanActivity
+-- Created by: Romesh
+-- Created on: 16-Aug-2012
+
+ALTER procedure [dbo].[SP_CopyAuditProg_TempToMain]
+@PlanID int ,@UpdatedBy int
+AS
+Declare @tmpActID int
+Declare @tmpRiskID int
+Declare @tmpPlanActivityID int
+
+Declare @OrgActID int
+Declare @OrgRiskID int
+Declare @OrgPlanActivityID int
+
+Declare @actID int
+Declare @riskID int
+Declare @PlanActivityID int
+
+Declare @Action int
+
+
+----------- Log for Deleted Rows -----------
+ insert into LogsControlPlanActivityMain (ActID,PlanID,ActName,UserID,Action,UpdatedOn,UpdatedBy) 
+ select ActID,PlanId,ActName,userID,3,getdate(),@UpdatedBy from  ControlPlanActivityMain 
+ where ActId not in (select OrgActID from ControlPlanActivityMainTemp)
+ and PlanId=@PlanID
+ 
+ insert into LogsControlPlanRisk (RiskID,ActID,PlanID,RiskName,Action,UpdatedOn,UpdatedBy) 
+ select RiskID,ActID,PlanId,RiskName,3,getdate(),@UpdatedBy from ControlPlanRisk 
+ where RiskID not in (select OrgRiskID from ControlPlanRiskTemp)
+ and PlanId=@PlanID
+ 
+ insert into LogsControlPlanActivity (PlanActivityID,PlanID,actID,riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected,Action,UpdatedOn,UpdatedBy) 
+ select PlanActivityID,PlanID,actID,riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected,3,getdate(),@UpdatedBy from ControlPlanActivity 
+ where PlanActivityID not in (select OrgPlanActivityID from ControlPlanActivityTemp)
+ and PlanId=@PlanID
+ 
+ 
+ --- Now delete the rows ---
+--Delete from  ControlPlanActivityMain where ActId not in (select OrgActID from ControlPlanActivityMainTemp) and PlanId=@PlanID 
+--Delete from  ControlPlanRisk where RiskID not in (select OrgRiskID from ControlPlanRiskTemp) and PlanId=@PlanID 
+--Delete from  ControlPlanActivity where PlanActivityID not in (select OrgPlanActivityID from ControlPlanActivityTemp)  and PlanId=@PlanID
+
+UPDATE  ControlPlanActivityMain SET IsDelete=1 where ActId not in (select OrgActID from ControlPlanActivityMainTemp where PlanId=@PlanID ) and PlanId=@PlanID ;
+UPDATE ControlPlanRisk  SET IsDelete=1 where RiskID not in (select OrgRiskID from ControlPlanRiskTemp where PlanId=@PlanID ) and PlanId=@PlanID ;
+UPDATE ControlPlanActivity SET IsDelete=1 where PlanActivityID not in (select OrgPlanActivityID from ControlPlanActivityTemp where PlanId=@PlanID )  and PlanId=@PlanID
+
+-----------------------------------------------
+
+Declare C1 Cursor for Select actID,OrgActID from ControlPlanActivityMainTemp Where PlanID=@PlanID
+OPEN C1
+	fetch next from C1 into @tmpActID,@OrgActID
+		While(@@FETCH_STATUS=0)
+			Begin
+				Print 'TmpActID='+ convert(varchar(10),@tmpActID,0)
+				-------- Insert into ControlPlanActivityMain ---------
+				IF @OrgActID <> 0  	
+				 BEGIN			 
+				  UPDATE ControlPlanActivityMain SET ActName=CPAMT.ActName,UserID=CPAMT.UserID  From ControlPlanActivityMain CPAM,ControlPlanActivityMainTemp CPAMT where CPAM.ActID=CPAMT.OrgActID AND CPAMT.OrgActID=@OrgActID ;
+				   Select @actID = @OrgActID ;
+				   set @Action=2;
+				  END
+				ELSE 
+				 BEGIN
+				  INSERT INTO ControlPlanActivityMain (PlanID,ActName,UserID) select PlanID,ActName,UserID from ControlPlanActivityMainTemp where actID=@tmpActID and IsDelete=0
+				  Select @actID = @@identity
+				  set @Action=1;
+			    END
+								
+ 				Print 'ActID='+ convert(varchar(10),@actID,0)
+ 				--------->Log Entry
+ 				 insert into LogsControlPlanActivityMain (ActID,PlanID,ActName,UserID,Action,UpdatedOn,UpdatedBy) 
+ 				 select ActID,PlanID,ActName,UserID,@Action,getdate(),@UpdatedBy from ControlPlanActivityMain where ActID=@actID ;
+ 				--------->Log Entry 				
+				
+				Declare C2 Cursor for Select riskID,OrgRiskID from ControlPlanRiskTemp Where actID=@tmpActID
+				OPEN C2
+				  fetch next from C2 into @tmpRiskID,@OrgRiskID
+				    While(@@FETCH_STATUS=0)
+				     BEGIN
+					Print 'TmpRiskID='+ convert(varchar(10),@tmpRiskID,0)
+					Print '@OrgRiskID='+ convert(varchar(10),@OrgRiskID,0)
+					-------- Insert into RepositoryRisk ---------
+					
+					IF @OrgRiskID <> 0  
+					 BEGIN				 
+						UPDATE ControlPlanRisk SET RiskName=CPAMT.RiskName  From ControlPlanRisk CPAM,ControlPlanRiskTemp CPAMT where CPAM.RiskID=CPAMT.OrgRiskID AND CPAMT.OrgRiskID=@OrgRiskID ;
+				       Select @riskID = @OrgRiskID ;
+				       set @Action=2;
+				     END
+				    ELSE 
+				     BEGIN
+				        Print '@OrgRiskID is zero here'
+						INSERT INTO ControlPlanRisk (actID,PlanID,RiskName) select @actID,PlanID,RiskName from ControlPlanRiskTemp where RiskID=@tmpRiskID  and IsDelete=0
+						Select @riskID = @@identity
+						set @Action=1;
+					 END
+					
+					
+	 				Print 'RiskID='+ convert(varchar(10),@riskID,0)
+				--------->Log Entry
+ 				 insert into LogsControlPlanRisk (RiskID,ActID,PlanID,RiskName,Action,UpdatedOn,UpdatedBy) 
+ 				 select RiskID,ActID,PlanID,RiskName,@Action,getdate(),@UpdatedBy from ControlPlanRisk where RiskID=@riskID ;
+ 				--------->Log Entry 	
+ 					
+					   Declare C3 Cursor for Select PlanActivityID,OrgPlanActivityID from ControlPlanActivityTemp Where riskID=@tmpriskID and actID=@tmpActID
+					    OPEN C3
+						fetch next from C3 into @tmpPlanActivityID,@OrgPlanActivityID
+						 while(@@FETCH_STATUS=0)
+						   Begin
+							Print '@tmpPlanActivityID='+ convert(varchar(10),@tmpPlanActivityID,0)
+							Print '@OrgPlanActivityID='+ convert(varchar(10),@OrgPlanActivityID,0)
+							-------- Insert into RepositoryActivity ---------
+							
+							IF @OrgPlanActivityID <> 0  
+							BEGIN
+					        	UPDATE ControlPlanActivity SET userID=CPAMT.userID,actLevel=CPAMT.actLevel,ActivityName=CPAMT.ActivityName,PerAuditArea=CPAMT.PerAuditArea,ExistingControl=CPAMT.ExistingControl,Effectiveness=CPAMT.Effectiveness,CEI=CPAMT.CEI,isDelete=CPAMT.isDelete,Weight=CPAMT.Weight,Risk=CPAMT.Risk,DataSource=CPAMT.DataSource,SampleSelected=CPAMT.SampleSelected  From ControlPlanActivity CPAM,ControlPlanActivityTemp CPAMT where CPAM.PlanActivityID=CPAMT.OrgPlanActivityID AND CPAMT.OrgPlanActivityID=@OrgPlanActivityID ;
+							    Select @PlanActivityID =@OrgPlanActivityID ;
+							    set @Action=2;
+							END
+							ELSE
+							 BEGIN							
+							   INSERT INTO ControlPlanActivity (PlanID,actID,riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected) select PlanID,@actID,@riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected from ControlPlanActivityTemp where PlanActivityID=@tmpPlanActivityID  and IsDelete=0
+							   Select @PlanActivityID = @@identity
+							   set @Action=1;
+							  END
+							
+			 				Print '@PlanActivityID='+ convert(varchar(10),@PlanActivityID,0)
+							 --------->Log Entry 							 
+ 							  insert into LogsControlPlanActivity (PlanActivityID,PlanID,actID,riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected,Action,UpdatedOn,UpdatedBy) 
+
+							  select PlanActivityID,PlanID,actID,riskID,userID,ParentID,actLevel,ActivityName,PerAuditArea,ExistingControl,Effectiveness,CEI,isCompleted,isDelete,Weight,Risk,DataSource,SampleSelected,@Action,getdate(),@UpdatedBy from ControlPlanActivity 
+							  where PlanActivityID=@PlanActivityID;	
+ 							--------->Log Entry 	
+ 							
+							fetch next from C3 into @tmpPlanActivityID,@OrgPlanActivityID
+						   End					     
+					    Close C3
+					    DEALLOCATE C3			
+					fetch next from C2 into @tmpRiskID,@OrgRiskID
+				     END
+				CLOSE C2
+				DEALLOCATE C2		 
+			fetch next from C1 into @tmpActID,@OrgActID
+			End	
+		 
+
+CLOSE C1
+DEALLOCATE C1
+
+Exec SP_UpdatePerAuditArea @PlanID
+Exec SP_UpdatePerAuditAreaTemp @PlanID
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ 
+--Fort Nightly
+--Bi-Monthly
+--Half Yearly
+
+--select date as GenDate from dbo.FunGenerateDateTable(getdate(), dateadd(year, 2, getdate()), 'month', 6) 
+--   OPTION ( MAXRECURSION 32767 )
+ 
+ 
+select date as RunDate, Lower(FT.FrequencyName) as Frequency, SAF.CompanyID, SAF.ProcessOwnerID, SAFC.Escalator1, SAFC.Escalator2, SAFC.Escalator3, SA.RiskID, SARisk.RiskName, SA.IsKeyControl, 
+SA.ControlID, SA.ControlNo, SA.ControlName, SA.ControlObjective, SA.ControlDescription, SA.ControlCategoryID, SA.FrequencyType, 
+SA.ControlTypeID, SA.NatureControlID,
+DATEADD(day, SAF.ProcessOwnerDueDay, date), 
+DATEADD(day, SAF.Escalator1StartDueDay, DATEADD(day, SAF.ProcessOwnerDueDay, date)),
+DATEADD(day, SAF.Escalator2StartDueDay, DATEADD(day, SAF.ProcessOwnerDueDay, date)), 
+DATEADD(day, SAF.Escalator3StartDueDay, DATEADD(day, SAF.ProcessOwnerDueDay, date)) 
+date, SAF.AssessmentStartDate, SAF.AssessmentEndDate
+from SAAssessmentForControl SAFC 
+inner join SAAssessmentFor SAF on SAF.SAForID=SAFC.SAForID 
+inner join SAControl SA on SA.ControlID=SAFC.ControlID 
+inner join Frequencytype FT on FT.Frequencytype=SA.Frequencytype 
+Inner join SARisk on SARisk.RiskID=SA.RiskID
+--cross join dbo.FunGenerateDateTable(getdate() , dateadd(month, 3, getdate()), 'month', 1) 
+ cross join dbo.FunGenerateDateTable((select AssessmentStartDate from SAAssessmentFor where SAForID in 
+ ( select SAForID from SAAssessmentForControl where SAForControlID in (24))) ,
+(select AssessmentEndDate from SAAssessmentFor where SAForID in 
+ ( select SAForID from SAAssessmentForControl where SAForControlID in (24))),
+ (select Lower(FrequencyName) from FrequencyType where FrequencyType in (select FrequencyType from SAControl where ControlID in (
+ select ControlID from SAAssessmentForControl where SAForControlID in (24)))) , 1) 
+where SA.Active=1 
+and SAFC.SAForControlID in ( 24 ) 
+and NOT Exists (select 1 from SAAssessment where day(AssignDate)=day(date) and month(AssignDate)=month(date) and year(AssignDate)=year(date))
+OPTION ( MAXRECURSION 32767 )
+
+ --------------------------------------------------------------------------------------------
+
+select * from ( 
+select ChecklistDay as cDay, Answer, Region.RegionName as Region, Brand.BrandName as Brand, Location.LocationName as Location, 
+Location.LocationCode as Code, Location.LevelCode as Level, dbo.FunConcatLocationUsers(Location.LocationID, 7) as 'Reports to', 
+Region.RegionID, Brand.BrandID, Location.LocationID, ChecklistStoreMain.ManagerID
+from Location 
+Inner join ChecklistStoreMain on ChecklistStoreMain.LocationID=Location.LocationID 
+and ChecklistStoreMain.CompanyID=1 And CheckListMonth= 2 and CheckListYear= 2015 and CheckListDay=1
+Inner join ChecklistStore on ChecklistStore.ChecklistStoreMainID=ChecklistStoreMain.ChecklistStoreMainID --and Answer=1 
+Inner join Checklist on Checklist.ChecklistID=ChecklistStore.ChecklistID 
+Left join Brand on Brand.BrandID=Location.BrandID 
+Left join Region on Region.RegionID=Location.RegionID 
+Left join Users on Users.UserID=ChecklistStoreMain.ManagerID where 1=1  
+) 
+as tbl PIVOT ( 
+count(Answer) FOR cDay in ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],[17],[18],[19],[20],[21],[22],[23],
+[24],[25],[26],[27],[28]) ) as PivotTable 
